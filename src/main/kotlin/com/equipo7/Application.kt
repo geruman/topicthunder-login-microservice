@@ -5,7 +5,7 @@ import io.ktor.server.netty.*
 import com.equipo7.plugins.*
 
 fun main() {
-    embeddedServer(Netty, port = System.getenv("PORT").toInt(), host = "topic-thunder-backend.herokuapp.com") {
+    embeddedServer(Netty, port = System.getenv("PORT").toInt(), host = "0.0.0.0") {
         configureRouting()
         configureSerialization()
     }.start(wait = true)
