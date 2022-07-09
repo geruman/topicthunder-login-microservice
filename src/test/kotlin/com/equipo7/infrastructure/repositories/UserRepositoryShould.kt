@@ -42,4 +42,15 @@ class UserRepositoryShould {
         val user = userRepository.findUser("German","Password")
         Assert.assertNotNull(user)
     }
+    @Test
+    fun deleteUser(){
+        val newUser = userRepository.createUser("German","Password")
+        if(newUser != null){
+            userRepository.deleteUser(newUser)
+        } else {
+            Assert.fail("New user was null")
+        }
+        val user = userRepository.findUser("German","Password")
+        Assert.assertNull(user)
+    }
 }

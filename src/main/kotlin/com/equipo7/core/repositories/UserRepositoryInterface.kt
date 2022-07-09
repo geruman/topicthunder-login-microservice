@@ -6,4 +6,5 @@ import com.equipo7.core.enitites.User
 interface UserRepositoryInterface {
     fun findUser(userName:String, password:String): User?
     fun createUser(userName:String, password:String): User?
+    fun deleteUser(user: User)
 }

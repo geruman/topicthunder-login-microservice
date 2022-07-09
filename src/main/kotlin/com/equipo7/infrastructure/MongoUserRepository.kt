@@ -4,6 +4,7 @@ import com.equipo7.core.enitites.User
 import com.equipo7.core.repositories.UserRepositoryInterface
 import org.bson.types.ObjectId
 import org.litote.kmongo.and
+import org.litote.kmongo.deleteOneById
 import org.litote.kmongo.eq
 import org.litote.kmongo.findOne
 
@@ -40,5 +41,17 @@ class MongoUserRepository(private val connectionHandler:MongodbConnectionHandler
             connectionHandler.closeConnection()
         }
         return userCreated
+    }
+
+    override fun deleteUser(user: User) {
+        try {
+            connectionHandler.connect()
+            val col = connectionHandler.getCollection<User>("User")
+            col.deleteOneById(user._id)
+        }catch(exception:Exception ){
+            exception.printStackTrace()
+        }finally {
+            connectionHandler.closeConnection()
+        }
     }
 }
