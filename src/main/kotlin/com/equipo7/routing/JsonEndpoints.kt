@@ -1,4 +1,5 @@
-package com.equipo7.plugins
+package com.equipo7.routing
+import com.equipo7.core.enitites.User
 import io.ktor.serialization.*
 import io.ktor.features.*
 import io.ktor.application.*
@@ -16,22 +17,8 @@ import kotlinx.serialization.encoding.Encoder
 import org.bson.types.ObjectId
 import org.litote.kmongo.*
 
-@Serializable
-data class User(@Serializable(with = ObjectIdAsString::class) val _id: ObjectId, val name: String, val password: String)
 
-object ObjectIdAsString: KSerializer<ObjectId>{
-    override val descriptor: SerialDescriptor
-        get() = PrimitiveSerialDescriptor("ObjectId", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): ObjectId {
-        return ObjectId(decoder.decodeString())
-    }
-
-    override fun serialize(encoder: Encoder, value: ObjectId) {
-        encoder.encodeString(value.toString())
-    }
-}
-fun Application.configureSerialization() {
+fun Application.configureJsonEndpoints() {
     val client = KMongo.createClient("mongodb://localhost:27017/");
     val database = client.getDatabase("topicthunder_login")
     val col = database.getCollection<User>("User")

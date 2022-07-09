@@ -56,6 +56,18 @@
             <artifactId>kmongo</artifactId>
             <version>4.6.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.kodein.di</groupId>
+            <artifactId>kodein-di</artifactId>
+            <version>7.13.0</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
