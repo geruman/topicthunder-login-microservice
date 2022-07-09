@@ -19,11 +19,26 @@ class UserRepositoryShould {
     @BeforeTest
     fun initialize(){
         mongoConnectionHandler = MongodbConnectionHandler("mongodb://localhost:27017/", "topicthunder_login_tests")
+        mongoConnectionHandler.connect()
+        mongoConnectionHandler.getCollection<User>("User").drop()
+        mongoConnectionHandler.closeConnection()
         userRepository = MongoUserRepository(mongoConnectionHandler)
-        userRepository.createUser("German","Password")
+
+    }
+    @Test
+    fun createAUser(){
+        val userCreated = userRepository.createUser("Ramon","Password")
+        Assert.assertNotNull(userCreated)
+    }
+    @Test
+    fun notCreateASecondUserWithSameName(){
+        val userCreated = userRepository.createUser("Ramon","Password")
+        val userCreated2 = userRepository.createUser("Ramon","Password")
+        Assert.assertNull(userCreated2)
     }
     @Test
     fun returnUser(){
+        userRepository.createUser("German","Password")
         val user = userRepository.findUser("German","Password")
         Assert.assertNotNull(user)
     }
