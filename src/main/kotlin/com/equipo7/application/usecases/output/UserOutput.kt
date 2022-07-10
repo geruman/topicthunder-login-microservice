@@ -1,7 +1,8 @@
 package com.equipo7.application.usecases.output
 
-import io.ktor.util.reflect.*
+import kotlinx.serialization.Serializable
 
+@Serializable
 class UserOutput (val id:String,val userName:String){
     override fun equals(other: Any?): Boolean {
         return if(other is UserOutput){

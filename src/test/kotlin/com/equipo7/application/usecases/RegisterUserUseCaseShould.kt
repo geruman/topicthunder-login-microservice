@@ -6,6 +6,7 @@ import com.equipo7.application.usecases.output.UserOutput
 import com.equipo7.core.enitites.User
 import com.equipo7.core.repositories.UserRepositoryInterface
 import io.ktor.http.*
+import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
 import org.junit.Assert
 import org.junit.Test
@@ -28,29 +29,39 @@ class RegisterUserUseCaseShould {
     }
     @Test
     fun createAnewUser() {
-        Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.OK)
+        runBlocking {
+            Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.Created)
+        }
         val newUser = registerUseCase.register(username, password)
         Assert.assertNotNull(newUser)
     }
 
     @Test
     fun createAnewUserInService() {
-        Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.OK)
+        runBlocking {
+            Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.Created)
+        }
         val newUser = registerUseCase.register(username, password)
         if(newUser!=null)
-            Mockito.verify(coreService).createUser(newUser)
+            runBlocking {
+                Mockito.verify(coreService).createUser(newUser)
+            }
         else
             Assert.fail("User was null")
     }
     @Test
-    fun throwAnExceptionWhenNot200inService(){
-        Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.NotFound)
+    fun throwAnExceptionWhenNot201inService(){
+        runBlocking {
+            Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.NotFound)
+        }
         Assert.assertThrows(Exception::class.java) { registerUseCase.register(username, password) }
     }
     //not call core service when inserting user in repository fails
     @Test
-    fun deleteCreatedUserWhenNot200inService(){
-        Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.NotFound)
+    fun deleteCreatedUserWhenNot201inService(){
+        runBlocking {
+            Mockito.`when`(coreService.createUser(MockitoHelper.anyObject())).thenReturn(HttpStatusCode.NotFound)
+        }
         try{
             registerUseCase.register(username, password)
         }

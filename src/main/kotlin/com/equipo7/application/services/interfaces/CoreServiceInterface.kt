@@ -4,5 +4,5 @@ import com.equipo7.application.usecases.output.UserOutput
 import io.ktor.http.*
 
 interface CoreServiceInterface {
-    fun createUser(user: UserOutput) : HttpStatusCode
+    suspend fun createUser(user: UserOutput) : HttpStatusCode
 }

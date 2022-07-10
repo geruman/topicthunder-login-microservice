@@ -1,27 +1,28 @@
 package com.equipo7.routing
+
+import com.equipo7.application.usecases.LoginUseCase
+import com.equipo7.application.usecases.RegisterUseCase
+import com.equipo7.application.usecases.output.UserOutput
 import com.equipo7.core.enitites.User
-import io.ktor.serialization.*
-import io.ktor.features.*
+import com.equipo7.infrastructure.CoreServiceImplementation
+import com.equipo7.infrastructure.MongoUserRepository
+import com.equipo7.infrastructure.MongodbConnectionHandler
 import io.ktor.application.*
+import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import org.bson.types.ObjectId
-import org.litote.kmongo.*
+import io.ktor.serialization.*
 
+fun createMongoConnection(): MongodbConnectionHandler {
+    return MongodbConnectionHandler(
+        "mongodb://localhost:27017/",
+        "topicthunder_login"
+    )
+}
 
 fun Application.configureJsonEndpoints() {
-    val client = KMongo.createClient("mongodb://localhost:27017/");
-    val database = client.getDatabase("topicthunder_login")
-    val col = database.getCollection<User>("User")
 
 
     install(ContentNegotiation) {
@@ -33,11 +34,40 @@ fun Application.configureJsonEndpoints() {
             val parameters = call.receiveParameters()
             val userName = parameters["user"]
             val password = parameters["password"]
-            val userFound : User? = col.findOne(and(User::name eq userName, User::password eq password))
-            if (userFound!=null)
-                call.respond(userFound)
-            else
-                call.respond(HttpStatusCode.NotFound,"Entity not found")
+            if (userName == null || password == null)
+                call.respond(HttpStatusCode.BadRequest, "user and password expected.")
+            else {
+
+                val userRepository = MongoUserRepository(
+                    createMongoConnection()
+                )
+                val useCase = LoginUseCase(userRepository)
+                val userFound = useCase.loginUser(userName, password)
+                if (userFound != null)
+                    call.respond(userFound)
+                else
+                    call.respond(HttpStatusCode.NotFound, "Entity not found")
+            }
+        }
+
+        post("/register") {
+            val parameters = call.receiveParameters()
+            val userName = parameters["user"]
+            val password = parameters["password"]
+            if (userName == null || password == null)
+                call.respond(HttpStatusCode.BadRequest, "user and password required")
+            else {
+                val userRepository = MongoUserRepository(
+                    createMongoConnection()
+                )
+                val useCase = RegisterUseCase(userRepository, CoreServiceImplementation())
+                val newUser = useCase.register(userName, password)
+                if (newUser != null)
+                    call.respond(newUser)
+                else
+                    call.respond(HttpStatusCode.ExpectationFailed, "Could not register user. Try with different name")
+            }
         }
     }
+
 }
