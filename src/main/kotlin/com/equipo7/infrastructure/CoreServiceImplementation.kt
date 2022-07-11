@@ -10,7 +10,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import org.bson.types.ObjectId
 
-const val coreServiceURL = "http://localhost:8080"
+const val coreServiceURL = "https://topicthunderapi.herokuapp.com"//"http://localhost:8080"
 class CoreServiceImplementation: CoreServiceInterface {
     override suspend fun createUser(user: UserOutput): HttpStatusCode {
         val client = HttpClient(CIO)
