@@ -14,7 +14,8 @@ class MongodbConnectionHandlerShould {
     private lateinit var mongoData:MongodbConnectionHandler
     @BeforeTest
     fun initialize(){
-        mongoData = MongodbConnectionHandler("mongodb://localhost:27017/","topicthunder_login_tests")
+        //"mongodb://localhost:27017/"
+        mongoData = MongodbConnectionHandler("mongodb+srv://german:FstGMkT0jVMuqpmr@cluster0.3xfnu.mongodb.net/?retryWrites=true&w=majority","topicthunder_login_tests")
 
     }
     @Test
