@@ -17,9 +17,10 @@ import io.ktor.serialization.*
 
 fun createMongoConnection(): MongodbConnectionHandler {
     return MongodbConnectionHandler(
-        "mongodb+srv://german:FstGMkT0jVMuqpmr@cluster0.3xfnu.mongodb.net/?retryWrites=true&w=majority",//"mongodb://localhost:27017/",
+        "mongodb+srv://german:FstGMkT0jVMuqpmr@cluster0.3xfnu.mongodb.net/?retryWrites=true&w=majority",
         "topicthunder_login"
     )
+    //"mongodb://localhost:27017/",
 }
 
 fun Application.configureJsonEndpoints() {
