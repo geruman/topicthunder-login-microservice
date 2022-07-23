@@ -9,7 +9,7 @@ import com.equipo7.routing.*
 class ApplicationTest {
     @Test
     fun testRoot() {
-        withTestApplication({ configureJsonEndpoints() }) {
+        withTestApplication({ loginEndpoint() }) {
             handleRequest(HttpMethod.Get, "/login").apply {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("Hello World!", response.content)
