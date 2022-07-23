@@ -17,8 +17,8 @@ fun createMongoConnection(): MongodbConnectionHandler {
     //"mongodb://localhost:27017/",
 }
 fun main() {
-    //val port = System.getenv("PORT").toInt()
-    val port = 8181
+    val port = System.getenv("PORT").toInt()
+    //val port = 8181
     embeddedServer(Netty, port = port, host = "0.0.0.0") {
         install(ContentNegotiation) {
             json()
